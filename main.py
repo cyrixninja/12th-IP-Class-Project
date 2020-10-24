@@ -104,18 +104,30 @@ def app5():
     plt.show()
 def app6():
     df = pd.read_csv('googleplaystore.csv')
+    df_reviews = pd.read_csv('googleplaystore_user_reviews.csv')
     df['Rating'].fillna((df['Rating'].mean()), inplace=True)
     df1 = df.dropna()
+    df1[df1.duplicated(['App'])]
+    df1[df1['App']=="Quick PDF Scanner + OCR FREE"]
     df1.sort_values(by=['Reviews'], inplace=True)
     df2 = df1.drop_duplicates(keep='last',subset=['App'])
+    df2['Installs'].unique()
+    #Converting the Installs number into float value and copying in a different column
     df2['Installs_num'] = df2['Installs'].apply(lambda x: float(x.split("+")[0].replace(",","")))
-    df2['Price_USD'] = df2['Price'].apply(lambda x: floa
+    df2['Installs_num'].unique()
+    df2['Price'].unique()
+    #converting the price into float values
+    df2['Price_USD'] = df2['Price'].apply(lambda x: float(x.replace("$","")))
+    df2['Price_USD'].unique()
+    #Converting reviews count into int
     df2['Reviews_count']= df1['Reviews'].apply(lambda x: int(x))
     df2['Size'].replace('Varies with device',np.nan,inplace=True)
     df2["Size"] = (df2["Size"].replace(r'[kM]+$', '', regex=True).astype(float) * df2["Size"].str.extract(r'[\d\.]+([kM]+)', expand=False).fillna(1).replace(["k","M"], [10**3, 10**6]).astype(int))
     df2["Android Ver"].replace('Varies with device',np.nan,inplace=True)
     df2['Size'].fillna((df2['Size'].mean()), inplace=True)
+#Our final data frame with all the extra values removed
     df3 = df2.drop(['Reviews','Installs','Price','Android Ver'],axis='columns')
+
     fig = plt.figure(figsize=(16,8)) 
     labels = df3['Category'].value_counts(sort = True).index
     sizes = df3['Category'].value_counts(sort = True)
