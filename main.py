@@ -96,12 +96,6 @@ def app4():
     paid = store[store.Type == "Paid"]
     store.Category.value_counts().plot(kind='barh',figsize= (12,8))   
     plt.show()
-def app5():
-    data= pd.read_csv('googleplaystore.csv')
-    plt.figure(figsize=(20,7))
-    sns.countplot(data['Content Rating'])
-    plt.xticks(rotation=-90)
-    plt.show()
 def app6():
     df = pd.read_csv('googleplaystore.csv')
     df_reviews = pd.read_csv('googleplaystore_user_reviews.csv')
@@ -141,18 +135,17 @@ def no_index():
     print("Reading Complete File without index")
     df=pd.read_csv("googleplaystore.csv",index_col=0)
     print(df)
-def new_column_name():
-    print("Adding new column name to existing Data")
 def read():
     df=pd.read_csv("googleplaystore.csv")
     print(df)
 def menu():
-    a=input("""
+    print("""
     1.Data Visualization
     2.Read CSV Data 
     3.Data Manipulation
     4.Exit
     """)
+    a=input("Enter Your Choice : ")
     if a=="1":
         datavisualization()
     elif a=="2":
@@ -164,16 +157,13 @@ def menu():
     else:
         print("Error")
 def datavisualization(): 
-    x=input("""
-    Data Visualization
-    1.Top 10 Apps Having Highest Installs
-    2.Comparison of Reviews of Paid and Free Apps
-    3.Rating Of Distibution
-    4.Distribution of App Categories
-    5.Content Rating
-    6.Top Categories
-
-    """)
+    print("""Data Visualization
+    1.Top 10 Apps Having Highest Installs(Bar Graph)
+    2.Comparison of Reviews of Paid and Free Apps(Line Chart)
+    3.Rating Of Distibution(Histogram)
+    4.Distribution of App Categories(Bar Graph)
+    5.Top Categories(Pie Chart)""")
+    x=input("Enter Your Choice :")
     if x=="1":
         app1()
     elif x=="2":
@@ -182,35 +172,41 @@ def datavisualization():
         app3()
     elif x=="4":
         app4()
-    elif x=="5":
-        app5()
     elif x=="6":
+        app5()
+    elif x=="5":
         app6()
     else:
         print("Error")
 def readdatafromfile():
-    b=input("""
+    Print("""
     1.Reading Complete File without Index
     2.Read Complete CSV File
     """)
+    b=input("Enter Your Choice :")
     if b=="1":
         no_index()
     elif b=="2":
         read()
 def datamanipulation():
-    c=input("""
+    print("""
     Data Maniputlation
     1.Sorting the Data as per your choice
     2.Read Top and Bottom Records from file as per requiremnt
     3.Make the copy of CSV file
     4.Read the Specific Columns
     """)
+    c=input("Enter Your Choice  :")
     if c=="2":
         top_bottom_selected_records()
     elif c=="3":
         duplicate()
     elif c=="4":
         specific_col()
+    elif c=="1":
+        datasort()
+    else:
+        print("Error")
 def top_bottom_selected_records():
     df=pd.read_csv("googleplaystore.csv")
     top=int(input("How many records to display from top:  "))
@@ -229,5 +225,65 @@ def specific_col():
     print("Reading Specific column from  CSV file")
     df=pd.read_csv("googleplaystore.csv",usecols=['App','Rating','Type'],index_col=0)
     print(df)
+def datasort():
+    df=pd.read_csv("googleplaystore.csv")
+    print("""
+    1.Press to 1 arrange the record as per the App Name
+    2.Press to 2 arrange the record as per the App Category 
+    3.Press to 3 arrange the record as per the Ratings
+    4.Press to 4 arrange the record as per the Reviews
+    5.Press to 5 arrange the record as per the Size
+    6.Press to 6 arrange the record as per the Installs
+    7.Press to 7 arrange the record as per the Type
+    8.Press to 8 arrange the record as per the Price
+    9.Press to 9 arrange the record as per the Content Ratings
+    10.Press to 10 arrange the record as per the Genres
+    11.Press to arrange the record as per the Last Update
+    12.Press to arrange the record as per the Current Version
+    13.Press to arrange the record as per the Android Version
+    """)
+
+    ab=input("Enter Your Choice :")
+
+    if ab=="1":
+        df.sort_values(["App"])
+        print(df)
+    elif ab=="2":
+        df.sort_values(["Category"],inplace=True)
+        print(df)
+    elif ab=="3":
+        df.sort_values(["Ratings"],inplace=True)
+        print(df)
+    elif ab=="4":
+        df.sort_values(["Reviews"],inplace=True)
+        print(df)
+    elif ab=="5":
+        df.sort_values(["Size"],inplace=True)
+        print(df)
+    elif ab=="6":
+        df.sort_values(["Installs"],inplace=True)
+        print(df)
+    elif ab=="7":
+        df.sort_values(["Type"],inplace=True)
+        print(df)
+    elif ab=="8":
+        df.sort_values(["Price"],inplace=True)
+        print(df)
+    elif ab=="9":
+        df.sort_values(["Content Rating"],inplace=True)
+        print(df)
+    elif ab=="10":
+        df.sort_values(["Genres"],inplace=True)
+        print(df)
+    elif ab=="11":
+        df.sort_values(["Last Updated"],inplace=True)
+        print(df)
+    elif ab=="12":
+        df.sort_values(["Current Ver"],inplace=True)
+        print(df)
+    elif ab=="13":
+        df.sort_values(["Android Ver"],inplace=True)
+        print(df)
+
 
 menu()
