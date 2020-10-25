@@ -224,5 +224,5 @@ def duplicate():
     print("Data from the new file")
     print(df)
 def specific_col():
-    print()
+    print("Still in dev")
 menu()
