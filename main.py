@@ -125,7 +125,7 @@ def app6():
     df2["Size"] = (df2["Size"].replace(r'[kM]+$', '', regex=True).astype(float) * df2["Size"].str.extract(r'[\d\.]+([kM]+)', expand=False).fillna(1).replace(["k","M"], [10**3, 10**6]).astype(int))
     df2["Android Ver"].replace('Varies with device',np.nan,inplace=True)
     df2['Size'].fillna((df2['Size'].mean()), inplace=True)
-#Our final data frame with all the extra values removed
+    #Our final data frame with all the extra values removed
     df3 = df2.drop(['Reviews','Installs','Price','Android Ver'],axis='columns')
 
     fig = plt.figure(figsize=(16,8)) 
@@ -157,6 +157,8 @@ def menu():
         datavisualization()
     elif a=="2":
         readdatafromfile()
+    elif a=="3":
+        datamanipulation()
     elif a=="4":
         exit()
     else:
@@ -195,5 +197,32 @@ def readdatafromfile():
         no_index()
     elif b=="2":
         read()
-
+def datamanipulation():
+    c=input("""
+    Data Maniputlation
+    1.Sorting the Data as per your choice
+    2.Read Top and Bottom Records from file as per requiremnt
+    3.Make the copy of CSV file
+    4.Read the Specific Columns
+    """)
+    if c=="2":
+        top_bottom_selected_records()
+    elif c=="3":
+        duplicate()
+def top_bottom_selected_records():
+    df=pd.read_csv("googleplaystore.csv")
+    top=int(input("How many records to display from top:  "))
+    print("First",top,"Records")
+    print(df.head(top))
+    bottom=int(input("How mant records to display from Bottom:"))
+    print("Last",bottom,"Records")
+    print(df.tail(bottom))
+def duplicate():
+    print("Duplicate the file with new file").
+    df=pd.read_csv("googleplaystore.csv")
+    df.to_csv("googleplaystorenew.csv")
+    print("Data from the new file")
+    print(df)
+def specific_col()
+    print()
 menu()
