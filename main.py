@@ -218,11 +218,11 @@ def top_bottom_selected_records():
     print("Last",bottom,"Records")
     print(df.tail(bottom))
 def duplicate():
-    print("Duplicate the file with new file").
+    print("Duplicate the file with new file")
     df=pd.read_csv("googleplaystore.csv")
     df.to_csv("googleplaystorenew.csv")
     print("Data from the new file")
     print(df)
-def specific_col()
+def specific_col():
     print()
 menu()
