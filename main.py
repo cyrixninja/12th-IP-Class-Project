@@ -209,6 +209,8 @@ def datamanipulation():
         top_bottom_selected_records()
     elif c=="3":
         duplicate()
+    elif c=="4":
+        specific_col()
 def top_bottom_selected_records():
     df=pd.read_csv("googleplaystore.csv")
     top=int(input("How many records to display from top:  "))
@@ -224,5 +226,8 @@ def duplicate():
     print("Data from the new file")
     print(df)
 def specific_col():
-    print("Still in dev")
+    print("Reading Specific column from  CSV file")
+    df=pd.read_csv("googleplaystore.csv",usecols=['App','Rating','Type'],index_col=0)
+    print(df)
+
 menu()
