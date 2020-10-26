@@ -343,17 +343,6 @@ def app14():
     data = pd.read_csv('googleplaystore.csv')
     data.Content_Rating.value_counts().plot(kind='line')
     plt.show()
-
-
-
-
-
-
-
-
-
-
-
 menu()
 
 
