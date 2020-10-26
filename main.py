@@ -179,7 +179,7 @@ def datavisualization():
     else:
         print("Error")
 def readdatafromfile():
-    Print("""
+    print("""
     1.Reading Complete File without Index
     2.Read Complete CSV File
     """)
@@ -252,7 +252,7 @@ def datasort():
         df.sort_values(["Category"],inplace=True)
         print(df)
     elif ab=="3":
-        df.sort_values(["Ratings"],inplace=True)
+        df.sort_values(["Rating"],inplace=True)
         print(df)
     elif ab=="4":
         df.sort_values(["Reviews"],inplace=True)
