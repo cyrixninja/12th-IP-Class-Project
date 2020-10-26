@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-
+import re
 
  #Reading data from csv dataset
 data = pd.read_csv('googleplaystore.csv')
@@ -97,39 +97,28 @@ def app4():
     store.Category.value_counts().plot(kind='barh',figsize= (12,8))   
     plt.show()
 def app6():
-    df = pd.read_csv('googleplaystore.csv')
-    df_reviews = pd.read_csv('googleplaystore_user_reviews.csv')
-    df['Rating'].fillna((df['Rating'].mean()), inplace=True)
-    df1 = df.dropna()
-    df1[df1.duplicated(['App'])]
-    df1[df1['App']=="Quick PDF Scanner + OCR FREE"]
-    df1.sort_values(by=['Reviews'], inplace=True)
-    df2 = df1.drop_duplicates(keep='last',subset=['App'])
-    df2['Installs'].unique()
-    #Converting the Installs number into float value and copying in a different column
-    df2['Installs_num'] = df2['Installs'].apply(lambda x: float(x.split("+")[0].replace(",","")))
-    df2['Installs_num'].unique()
-    df2['Price'].unique()
-    #converting the price into float values
-    df2['Price_USD'] = df2['Price'].apply(lambda x: float(x.replace("$","")))
-    df2['Price_USD'].unique()
-    #Converting reviews count into int
-    df2['Reviews_count']= df1['Reviews'].apply(lambda x: int(x))
-    df2['Size'].replace('Varies with device',np.nan,inplace=True)
-    df2["Size"] = (df2["Size"].replace(r'[kM]+$', '', regex=True).astype(float) * df2["Size"].str.extract(r'[\d\.]+([kM]+)', expand=False).fillna(1).replace(["k","M"], [10**3, 10**6]).astype(int))
-    df2["Android Ver"].replace('Varies with device',np.nan,inplace=True)
-    df2['Size'].fillna((df2['Size'].mean()), inplace=True)
-    #Our final data frame with all the extra values removed
-    df3 = df2.drop(['Reviews','Installs','Price','Android Ver'],axis='columns')
-
-    fig = plt.figure(figsize=(16,8)) 
-    labels = df3['Category'].value_counts(sort = True).index
-    sizes = df3['Category'].value_counts(sort = True)
-    plt.pie(sizes,labels=labels,autopct='%1.1f%%', shadow=True)
-    plt.title('Top categories',size = 20)
-    plt.legend(labels, loc="best")
-    plt.axis('equal')
-    plt.tight_layout()
+    data = pd.read_csv('googleplaystore.csv')
+    data.Category.value_counts().plot(kind='pie')
+    plt.show()
+def app7():
+    #read_csv load data
+    data = pd.read_csv('googleplaystore.csv')
+    fig, ax = plt.subplots()
+    ax.scatter(x = data.groupby('Category')['Rating'].mean()[1:].index, y = data.groupby('Category')['Rating'].mean()[1:].values)
+    plt.ylabel('Category', fontsize=13)
+    plt.xlabel('Rating', fontsize=13)
+    plt.xticks(rotation=90)
+    plt.show()
+def app8():
+    data = pd.read_csv('googleplaystore.csv')
+    data.Installs=data.Installs.apply(lambda x: x.strip('+'))
+    data.Installs=data.Installs.apply(lambda x: x.replace(',',''))
+    data.Installs=data.Installs.replace('Free',np.nan)
+    data.Installs=pd.to_numeric(data.Installs)
+    data.Installs=pd.to_numeric(data.Installs)
+    data.Installs.hist();
+    plt.xlabel('No. of Installs')
+    plt.ylabel('Frequency')
     plt.show()
 def no_index():
     print("Reading Complete File without index")
@@ -162,7 +151,17 @@ def datavisualization():
     2.Comparison of Reviews of Paid and Free Apps(Line Chart)
     3.Rating Of Distibution(Histogram)
     4.Distribution of App Categories(Bar Graph)
-    5.Top Categories(Pie Chart)""")
+    5.Free v/s Paid(Pie Chart)
+    6.Categories(Pie Chart)
+    7.Rating-Category(Scatter Chart)
+    8.Installs(Histogram)
+    9.Current Version Updated(Bar Graph)
+    10.Android Versions(Bar Graph)
+    11.Content Ratings(Bar Graph)
+    12.Content Ratings(Pie Chart)
+    13.Categories(Line Chart)
+    14.Content Ratings(Line Chart)
+    """)
     x=input("Enter Your Choice :")
     if x=="1":
         app1()
@@ -173,9 +172,25 @@ def datavisualization():
     elif x=="4":
         app4()
     elif x=="6":
-        app5()
-    elif x=="5":
         app6()
+    elif x=="5":
+        app5()
+    elif x=="7":
+        app7()
+    elif x=="8":
+        app8()
+    elif x=="9":
+        app9()
+    elif x=="10":
+        app10()
+    elif x=="11":
+        app11()
+    elif x=="12":
+        app12()
+    elif x=="13":
+        app13()
+    elif x=="14":
+        app14()
     else:
         print("Error")
 def readdatafromfile():
@@ -284,6 +299,62 @@ def datasort():
     elif ab=="13":
         df.sort_values(["Android Ver"],inplace=True)
         print(df)
+def app5():
+    data = pd.read_csv('googleplaystore.csv')
+    explode=[0,0.1]
+    labels=["Free","Paid"]
+    plt.figure(figsize=(5,5))
+    plt.pie(data[data['Genres']=='Tools'].Type.value_counts().values,labels=data[data['Genres']=='Tools'].Type.value_counts().index,explode=explode, autopct='%1.1f%%')
+    plt.title("Free v/s Paid Apps")
+    plt.show()
+def app9():
+    data = pd.read_csv('googleplaystore.csv')
+    temp=data.Current_Ver.replace(np.nan,'Varies with device')
+    temp=temp.apply(lambda x: 'Varies with device' if x=='Varies with device'  else  re.findall('^[0-9]\.[0-9]|[\d]|\W*',str(x))[0] )
+    data['Current_Ver_updated']=temp
+    data.Current_Ver_updated.value_counts().plot(kind="barh", figsize=(15,15));
+    plt.legend(bbox_to_anchor=(1.0,1.0))
+    plt.xscale('log')
+    plt.show()
+def app10():
+    data = pd.read_csv('googleplaystore.csv')
+    data['Version_begin']=data.Android_Ver.apply(lambda x:str(x).split(' and ')[0].split(' - ')[0])
+    data.Version_begin=data.Version_begin.replace('4.4W','4.4')
+    data['Version_end']=data.Android_Ver.apply(lambda x:str(x).split(' and ')[-1].split(' - ')[-1])
+    twowaytable = pd.crosstab(index=data.Version_begin,columns=data.Version_end)
+    twowaytable.plot(kind="barh", figsize=(15,15),stacked=True);
+    plt.legend(bbox_to_anchor=(1.0,1.0))
+    plt.xscale('log')
+    plt.show()
+def app11():
+    data = pd.read_csv('googleplaystore.csv')
+    data.Content_Rating.value_counts().plot(kind='bar')
+    plt.yscale('log')
+    plt.show()
+def app12():
+    data = pd.read_csv('googleplaystore.csv')
+    data.Content_Rating.value_counts().plot(kind='pie')
+    plt.show()
+def app13():
+    data = pd.read_csv('googleplaystore.csv')
+    data.Category.value_counts().plot(kind='line')
+    plt.show()
+def app14():
+    data = pd.read_csv('googleplaystore.csv')
+    data.Content_Rating.value_counts().plot(kind='line')
+    plt.show()
+
+
+
+
+
+
+
+
+
 
 
 menu()
+
+
+
